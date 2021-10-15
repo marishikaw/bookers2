@@ -12,10 +12,9 @@
   <body>
     <!--ログインしてたら-->
     <% if user_signed_in? %>
-    
-    
-    
-    
+      <li>
+      <%= link_to 'Home', user_path(current_user.id) %>
+      </li>
     
       <li>
         <%= link_to "Log out", destroy_user_session_path, method: :delete %>
@@ -23,10 +22,6 @@
     
     <!--ログインしてなかったら-->
     <% else %>
-    
-    
-    
-    
     
       <li>
         <%= link_to "Sign up", new_user_registration_path %>
@@ -37,5 +32,8 @@
     <% end %>
     
     <%= yield %>
+    
+    <p>CopyRight Infratop.inc</p>
+    
   </body>
 </html>
