@@ -21,6 +21,7 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find(params[:id])
+    @book_new = Book.new
     @user = @book.user
   end
   
@@ -28,6 +29,14 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
   end
 
+  def baria_user
+    @book = Book.find(params[:id])
+    user = @book.user
+    if user != current_user
+      redirect_to user_path(current_user)
+    end
+  end
+  
   def destroy
     @book = Book.find(params[:id])
     @book.destroy
@@ -51,12 +60,5 @@ class BooksController < ApplicationController
     params.require(:book).permit(:title, :body)
   end
   
-  def baria_user
-    @book = Book.find(params[:id])
-    user = @book.user
-    if user != current_user
-      redirect_to user_path(current_user)
-    end
-  end
   
 end
