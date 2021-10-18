@@ -1,12 +1,17 @@
 class BooksController < ApplicationController
-  def new
-  end
-
+  before_action :baria_user, only: [:edit]
+  
   def create
     @book = Book.new(book_params)
     @book.user_id = current_user.id
-    @book.save
-    redirect_to book_path(@book.id)
+    
+    if @book.save
+      redirect_to book_path(@book.id)
+      flash[:notice] = 'You have created book successfully.'
+    else
+      @books = Book.all
+      render :index
+    end
   end
 
   def index
@@ -16,6 +21,7 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find(params[:id])
+    @user = @book.user
   end
   
   def edit
@@ -30,8 +36,13 @@ class BooksController < ApplicationController
   
   def update
     @book = Book.find(params[:id])
-    @book.update(book_params)
-    redirect_to book_path(@book.id)
+    
+    if @book.update(book_params)
+      redirect_to book_path(@book)
+      flash[:notice] = 'You have updated book successfully.'
+    else
+      render :edit
+    end
   end
   
   private
@@ -39,4 +50,13 @@ class BooksController < ApplicationController
   def book_params
     params.require(:book).permit(:title, :body)
   end
+  
+  def baria_user
+    @book = Book.find(params[:id])
+    user = @book.user
+    if user != current_user
+      redirect_to user_path(current_user)
+    end
+  end
+  
 end
